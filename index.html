@@ -54,6 +54,7 @@
               for (const w of word) {
                 if (sentence.indexOf(w) >= 0) {
                   sentence = sentence.replace(w, longest);
+                  break;
                 }
               }
             }
