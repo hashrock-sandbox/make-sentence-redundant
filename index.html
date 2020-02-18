@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .output {
+        background-color: beige;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h2>入力した文章長くするツール</h2>
+      <textarea
+        class="input"
+        v-model="input"
+        name=""
+        id=""
+        cols="60"
+        rows="60"
+      ></textarea>
+      <textarea
+        class="output"
+        v-model="output"
+        name=""
+        id=""
+        cols="60"
+        rows="60"
+      ></textarea>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data() {
+          return {
+            input: `吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ちついて書生の顔を見たのがいわゆる人間というものの見始であろう。この時妙なものだと思った感じが今でも残っている。第一毛をもって装飾されべきはずの顔がつるつるしてまるで薬缶だ。その後猫にもだいぶ逢ったがこんな片輪には一度も出会わした事がない。のみならず顔の真中があまりに突起している。そうしてその穴の中から時々ぷうぷうと煙を吹く。どうも咽せぽくて実に弱った。これが人間の飲む煙草というものである事はようやくこの頃知った。            `,
+            dict: []
+          };
+        },
+        computed: {
+          output() {
+            let sentence = this.input;
+            for (const word of this.dict) {
+              const longest = word.reduce(function(longest, currentWord) {
+                return currentWord.length > longest.length
+                  ? currentWord
+                  : longest;
+              }, "");
+
+              for (const w of word) {
+                if (sentence.indexOf(w) >= 0) {
+                  sentence = sentence.replace(w, longest);
+                }
+              }
+            }
+
+            return sentence;
+          }
+        },
+        mounted() {
+          fetch("./min.json")
+            .then(i => i.json())
+            .then(data => {
+              this.dict = data;
+            });
+        }
+      });
+    </script>
+  </body>
+</html>
